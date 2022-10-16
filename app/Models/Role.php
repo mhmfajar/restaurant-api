@@ -11,4 +11,7 @@ class Role extends Model
 
     protected $primaryKey = 'role_id';
     protected $fillable = ['name'];
+
+    public const KASIR = 1;
+    public const PELAYAN = 2;
 }
