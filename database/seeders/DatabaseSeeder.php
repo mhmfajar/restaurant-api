@@ -16,9 +16,22 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        \App\Models\Role::factory('roles')->createMany([
+            ['name' => 'Kasir'],
+            ['name' => 'Pelayan']
+        ]);
+
+        \App\Models\User::factory()->createMany([
+            [
+                'name' => 'Kasir 1',
+                'email' => 'kasir1@example.com',
+                'role_id' => 1
+            ],
+            [
+                'name' => 'Pelayan 1',
+                'email' => 'pelayan1@example.com',
+                'role_id' => 2
+            ]
+        ]);
     }
 }
