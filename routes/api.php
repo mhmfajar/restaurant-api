@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\api\v1\AuthController;
 use App\Http\Controllers\api\v1\FoodController;
+use App\Http\Controllers\api\v1\TableController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,6 +23,8 @@ Route::prefix('v1')->group(function () {
             Route::post('logout', 'logout');
         });
     });
+
+    Route::apiResource('table', TableController::class)->except(['store', 'destroy']);
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('food', FoodController::class);
