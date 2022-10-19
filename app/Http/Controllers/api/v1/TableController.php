@@ -11,7 +11,7 @@ class TableController extends Controller
 {
     public function index()
     {
-        return TableResource::collection(Table::all());
+        return TableResource::collection(Table::orderBy('id', 'ASC')->get()->all());
     }
 
     public function show(Table $table)

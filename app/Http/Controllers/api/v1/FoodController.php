@@ -16,7 +16,7 @@ class FoodController extends Controller
      */
     public function index()
     {
-        return FoodResource::collection(Food::all());
+        return FoodResource::collection(Food::query()->orderBy('id', 'ASC')->get()->all());
     }
 
     /**

@@ -5,8 +5,10 @@ namespace App\Http\Controllers\api\v1;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
+use App\Models\OrderDetail;
 use App\Models\Table;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -17,12 +19,22 @@ class OrderController extends Controller
      */
     public function index()
     {
-        return OrderResource::collection(Order::all());
+        $data = Order::query()
+            ->with('table')
+            ->withSum('orderDetails', 'total_price')
+            ->withSum('orderDetails', 'qty')
+            ->orderBy('orders.id')
+            ->get()
+            ->all();
+
+        return OrderResource::collection($data);
     }
 
-    public function orderTable($tableId)
+    public function orderTable(Request $request)
     {
-        $table = Table::query()->find($tableId);
+        $id = $request->post('id');
+
+        $table = Table::query()->find($id);
         $table->status = 'ordered';
         $table->save();
 
@@ -39,17 +51,6 @@ class OrderController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  int  $id
@@ -57,7 +58,18 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        //
+        $order = Order::with(['orderDetails.food'])->find($id);
+
+        $data['total'] = 0;
+        $data['order_number'] = $order->order_number;
+        foreach ($order->orderDetails as $index => $value) {
+            $data['details'][$index]['menu'] = $value->food->name;
+            $data['details'][$index]['jumlah'] = $value->qty;
+            $data['details'][$index]['total_price'] = $value->total_price;
+            $data['total'] += $value->total_price;
+        }
+
+        return response()->json($data);
     }
 
     /**
@@ -72,14 +84,24 @@ class OrderController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function destroy()
     {
-        //
+        # code...
+    }
+
+    public function closeOrder(Request $request)
+    {
+        $orderId = $request->post('order_id');
+
+        $order = Order::query()->find($orderId);
+        $order->update([
+            'status' => 'closed'
+        ]);
+
+        Table::query()->find($order->table_id)->update([
+            'status' => 'available'
+        ]);
+
+        return response()->noContent();
     }
 }

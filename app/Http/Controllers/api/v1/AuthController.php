@@ -22,7 +22,7 @@ class AuthController extends Controller
         $user = User::query()->where('email', $request->email)->first();
 
         return response()->json([
-            'user' => $user,
+            'success' => true,
             'token' => $user->createToken('Api Token of ' . $user->name)->plainTextToken
         ]);
     }

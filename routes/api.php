@@ -26,9 +26,12 @@ Route::prefix('v1')->group(function () {
     });
 
     Route::apiResource('table', TableController::class)->except(['store', 'destroy']);
-    Route::apiResource('order', OrderController::class)->except(['store', 'destroy']);
 
     Route::middleware('auth:sanctum')->group(function () {
+        Route::get('user-profile', fn () => auth()->user());
+        Route::apiResource('order', OrderController::class)->except(['store', 'destroy']);
+        Route::post('order-table', [OrderController::class, 'orderTable']);
+        Route::put('close-order', [OrderController::class, 'closeOrder']);
         Route::apiResource('food', FoodController::class);
     });
 });

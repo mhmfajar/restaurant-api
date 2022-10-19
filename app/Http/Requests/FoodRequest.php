@@ -27,7 +27,7 @@ class FoodRequest extends FormRequest
             'name' => 'required|string',
             'type' => 'required|string',
             'price' => 'required|string',
-            'status' => 'string|boolean',
+            'status' => 'boolean',
         ];
     }
 }
