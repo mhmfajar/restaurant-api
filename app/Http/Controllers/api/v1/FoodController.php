@@ -19,6 +19,11 @@ class FoodController extends Controller
         return FoodResource::collection(Food::query()->orderBy('id', 'ASC')->get()->all());
     }
 
+    public function indexFoodOrder()
+    {
+        return FoodResource::collection(Food::query()->where('status', true)->orderBy('id', 'ASC')->get()->all());
+    }
+
     /**
      * Store a newly created resource in storage.
      *

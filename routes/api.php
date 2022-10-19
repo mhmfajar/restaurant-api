@@ -29,9 +29,13 @@ Route::prefix('v1')->group(function () {
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('user-profile', fn () => auth()->user());
-        Route::apiResource('order', OrderController::class)->except(['store', 'destroy']);
+        Route::apiResource('order', OrderController::class)->except(['store', 'update', 'destroy']);
+        Route::put('order/add', [OrderController::class, 'addOrderDetail']);
+        Route::put('order/update', [OrderController::class, 'updateOrderDetail']);
+        Route::delete('order/delete/{id}', [OrderController::class, 'deleteOrderDetail']);
         Route::post('order-table', [OrderController::class, 'orderTable']);
         Route::put('close-order', [OrderController::class, 'closeOrder']);
         Route::apiResource('food', FoodController::class);
+        Route::get('food-order', [FoodController::class, 'indexFoodOrder']);
     });
 });
