@@ -20,7 +20,7 @@ class FoodFactory extends Factory
             'name' => 'Test',
             'type' => 'Makanan',
             'price' => '10000',
-            'status' => 0
+            'status' => false
         ];
     }
 }
